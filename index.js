@@ -1,5 +1,9 @@
 let canvas = document.getElementById("myCanvas");
 let ctx = canvas.getContext("2d"); // Access to the canvas tags 2D drawing functions
+let x = canvas.width / 2;
+let dx = 2;
+let y = canvas.height - 30;
+let dy = -2;
 
 ctx.beginPath();
 ctx.rect(20, 40, 50, 50);
@@ -13,8 +17,27 @@ ctx.fillStyle = "green";
 ctx.fill();
 ctx.closePath();
 
-ctx.beginPath();
+ctx.beginPath(); 
 ctx.rect(160, 10, 100, 40);
 ctx.strokeStyle = "rgba(0, 0, 255, 0.5)";
 ctx.stroke(); // Color the outside of the figure
 ctx.closePath();
+
+function drawBall() {
+    ctx.beginPath();
+    ctx.arc(x, y, 10, 0, Math.PI*2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas, first two parameter are the positions X and Y
+                                                      // The other second arguments are the space that will be clear, therefore cleans all the canvas
+
+    drawBall();
+    x += dx;
+    y += dy;
+}
+
+setInterval(draw, 10);
