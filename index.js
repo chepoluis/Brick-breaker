@@ -25,6 +25,8 @@ let brickPadding = 10;
 let brickOffsetTop = 30;
 let brickOffsetLeft = 30;
 
+let score = 0;
+
 ctx.beginPath();
 ctx.rect(20, 40, 50, 50);
 ctx.fillStyle = '#FF0000';
@@ -51,6 +53,12 @@ for(c = 0; c < brickColumnCount; c++) {
     }
 }
 
+function drawScore() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Score: "+score, 8, 20);
+}
+
 function collisionDetection() {
     for(c = 0; c < brickColumnCount; c++) {
         for(r = 0; r < brickRowCount; r++) {
@@ -60,6 +68,12 @@ function collisionDetection() {
                 if(x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
                     dy = -dy;
                     b.status = 0;
+                    score++;
+
+                    if(score == brickRowCount*brickColumnCount) {
+                        alert("YOU WIN, CONGRATULATIONS!");
+                        document.location.reload();
+                    }
                     console.log(b)
                     console.log('array: ', bricks[c][r])
                 }
@@ -111,6 +125,7 @@ function draw() {
     drawBricks();
     drawBall();
     drawPaddle();
+    drawScore();
     collisionDetection();
 
     if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
