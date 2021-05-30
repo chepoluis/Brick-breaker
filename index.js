@@ -27,6 +27,8 @@ let brickOffsetLeft = 30;
 
 let score = 0;
 
+let lives = 3;
+
 ctx.beginPath();
 ctx.rect(20, 40, 50, 50);
 ctx.fillStyle = '#FF0000';
@@ -51,6 +53,12 @@ for(c = 0; c < brickColumnCount; c++) {
     for(r = 0; r < brickRowCount; r++) {
         bricks[c][r] = { x: 0, y: 0, status: 1 };
     }
+}
+
+function drawLives() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Lives: "+lives, canvas.width-65, 20);
 }
 
 function drawScore() {
@@ -126,6 +134,7 @@ function draw() {
     drawBall();
     drawPaddle();
     drawScore();
+    drawLives();
     collisionDetection();
 
     if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
@@ -142,8 +151,18 @@ function draw() {
             dy = -dy;
         }
         else {
-            alert("GAME OVER");
-            document.location.reload();
+            lives--;
+            if(!lives) {
+                alert("GAME OVER");
+                document.location.reload();
+            }
+            else {
+                x = canvas.width/2;
+                y = canvas.height-30;
+                dx = 2;
+                dy = -2;
+                paddleX = (canvas.width-paddleWidth)/2;
+            }
         }
     }
 
@@ -157,6 +176,8 @@ function draw() {
     if (leftPressed && paddleX > 0) {
         paddleX -= 7;
     }
+
+    requestAnimationFrame(draw);
 }
 
 function randomColor() {
@@ -170,8 +191,16 @@ function randomColor() {
     return color;
 }
 
+function mouseMoveHandler(e) {
+    var relativeX = e.clientX - canvas.offsetLeft;
+    if(relativeX > 0 && relativeX < canvas.width) {
+        paddleX = relativeX - paddleWidth/2;
+    }
+}
+
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
 
 // Key down and key up, manage events
 function keyDownHandler(e) {
@@ -194,4 +223,5 @@ function keyUpHandler(e) {
     }
 }
 
-setInterval(draw, 10);
+//setInterval(draw, 10);
+draw();
